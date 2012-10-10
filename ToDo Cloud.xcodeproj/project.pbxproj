@@ -18,6 +18,11 @@
 		FAD725E11623E8F0008028F2 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FAD725E01623E8F0008028F2 /* Default-568h@2x.png */; };
 		FAD725E41623E8F0008028F2 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD725E21623E8F0008028F2 /* MainStoryboard.storyboard */; };
 		FAD725E71623E8F0008028F2 /* ToDoCloudViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD725E61623E8F0008028F2 /* ToDoCloudViewController.m */; };
+		FAD725F51623EA18008028F2 /* AUIAnimatableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD725F21623EA18008028F2 /* AUIAnimatableLabel.m */; };
+		FAD725F61623EA18008028F2 /* UIFont+CoreTextExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD725F41623EA18008028F2 /* UIFont+CoreTextExtensions.m */; };
+		FAD725FD1624AAEB008028F2 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD725FC1624AAEB008028F2 /* CoreText.framework */; };
+		FAD725FF1624AAF8008028F2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD725FE1624AAF8008028F2 /* QuartzCore.framework */; };
+		FAD726EE1624DBD6008028F2 /* ToDoCloudLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD726ED1624DBD5008028F2 /* ToDoCloudLabel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +42,14 @@
 		FAD725E31623E8F0008028F2 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
 		FAD725E51623E8F0008028F2 /* ToDoCloudViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ToDoCloudViewController.h; sourceTree = "<group>"; };
 		FAD725E61623E8F0008028F2 /* ToDoCloudViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToDoCloudViewController.m; sourceTree = "<group>"; };
+		FAD725F11623EA18008028F2 /* AUIAnimatableLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AUIAnimatableLabel.h; sourceTree = "<group>"; };
+		FAD725F21623EA18008028F2 /* AUIAnimatableLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AUIAnimatableLabel.m; sourceTree = "<group>"; };
+		FAD725F31623EA18008028F2 /* UIFont+CoreTextExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+CoreTextExtensions.h"; sourceTree = "<group>"; };
+		FAD725F41623EA18008028F2 /* UIFont+CoreTextExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+CoreTextExtensions.m"; sourceTree = "<group>"; };
+		FAD725FC1624AAEB008028F2 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		FAD725FE1624AAF8008028F2 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		FAD726EC1624DBD5008028F2 /* ToDoCloudLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToDoCloudLabel.h; sourceTree = "<group>"; };
+		FAD726ED1624DBD5008028F2 /* ToDoCloudLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToDoCloudLabel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAD725FF1624AAF8008028F2 /* QuartzCore.framework in Frameworks */,
+				FAD725FD1624AAEB008028F2 /* CoreText.framework in Frameworks */,
 				FAD725CB1623E8F0008028F2 /* UIKit.framework in Frameworks */,
 				FAD725CD1623E8F0008028F2 /* Foundation.framework in Frameworks */,
 				FAD725CF1623E8F0008028F2 /* CoreGraphics.framework in Frameworks */,
@@ -56,6 +71,8 @@
 		FAD725BB1623E8F0008028F2 = {
 			isa = PBXGroup;
 			children = (
+				FAD725FE1624AAF8008028F2 /* QuartzCore.framework */,
+				FAD725FC1624AAEB008028F2 /* CoreText.framework */,
 				FAD725D01623E8F0008028F2 /* ToDo Cloud */,
 				FAD725C91623E8F0008028F2 /* Frameworks */,
 				FAD725C71623E8F0008028F2 /* Products */,
@@ -83,12 +100,15 @@
 		FAD725D01623E8F0008028F2 /* ToDo Cloud */ = {
 			isa = PBXGroup;
 			children = (
+				FAD725F01623E9C5008028F2 /* AUIAnimatedText */,
 				FAD725D91623E8F0008028F2 /* ToDoCloudAppDelegate.h */,
 				FAD725DA1623E8F0008028F2 /* ToDoCloudAppDelegate.m */,
 				FAD725E21623E8F0008028F2 /* MainStoryboard.storyboard */,
 				FAD725E51623E8F0008028F2 /* ToDoCloudViewController.h */,
 				FAD725E61623E8F0008028F2 /* ToDoCloudViewController.m */,
 				FAD725D11623E8F0008028F2 /* Supporting Files */,
+				FAD726EC1624DBD5008028F2 /* ToDoCloudLabel.h */,
+				FAD726ED1624DBD5008028F2 /* ToDoCloudLabel.m */,
 			);
 			path = "ToDo Cloud";
 			sourceTree = "<group>";
@@ -105,6 +125,17 @@
 				FAD725E01623E8F0008028F2 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FAD725F01623E9C5008028F2 /* AUIAnimatedText */ = {
+			isa = PBXGroup;
+			children = (
+				FAD725F11623EA18008028F2 /* AUIAnimatableLabel.h */,
+				FAD725F21623EA18008028F2 /* AUIAnimatableLabel.m */,
+				FAD725F31623EA18008028F2 /* UIFont+CoreTextExtensions.h */,
+				FAD725F41623EA18008028F2 /* UIFont+CoreTextExtensions.m */,
+			);
+			name = AUIAnimatedText;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -177,6 +208,9 @@
 				FAD725D71623E8F0008028F2 /* main.m in Sources */,
 				FAD725DB1623E8F0008028F2 /* ToDoCloudAppDelegate.m in Sources */,
 				FAD725E71623E8F0008028F2 /* ToDoCloudViewController.m in Sources */,
+				FAD725F51623EA18008028F2 /* AUIAnimatableLabel.m in Sources */,
+				FAD725F61623EA18008028F2 /* UIFont+CoreTextExtensions.m in Sources */,
+				FAD726EE1624DBD6008028F2 /* ToDoCloudLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,10 +289,13 @@
 		FAD725EB1623E8F0008028F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ToDo Cloud/ToDo Cloud-Prefix.pch";
 				INFOPLIST_FILE = "ToDo Cloud/ToDo Cloud-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -266,10 +303,13 @@
 		FAD725EC1623E8F0008028F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ToDo Cloud/ToDo Cloud-Prefix.pch";
 				INFOPLIST_FILE = "ToDo Cloud/ToDo Cloud-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -293,6 +333,7 @@
 				FAD725EC1623E8F0008028F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

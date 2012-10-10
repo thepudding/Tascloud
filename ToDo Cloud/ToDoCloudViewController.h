@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AUIAnimatableLabel.h"
 
-@interface ToDoCloudViewController : UIViewController
+// TODO this shouldn't be hard coded
+#define BUTTONS_HEIGHT 41
 
+@interface ToDoCloudViewController : UIViewController <UITextFieldDelegate>
+@property (weak, nonatomic) IBOutlet UITextField *taskInput;
+@property (weak, nonatomic) IBOutlet UIView *taskField;
+@property (nonatomic) CGPoint visualCenter;
+- (IBAction)addTask:(id)sender;
 @end
