@@ -5,7 +5,7 @@
 //  Created by Alexander Noguchi on 10/9/12.
 //  Copyright (c) 2012 Alexander Noguchi. All rights reserved.
 //
-
+#import "utils.h"
 
 #define MINIMUM_FONT_SIZE   20
 #define MAXIMUM_FONT_SIZE   40
@@ -15,7 +15,7 @@
     CGPoint currentPoint;
 }
 @property (nonatomic, assign) CGPoint visualCenter;
-@property (nonatomic, readonly) CGPoint velocity;
+@property (nonatomic,  readwrite) CGPoint velocity;
 - (id)initWithFrame:(CGRect)frame visualCenter:(CGPoint)visualCenter;
 - (void)checkAndUpdateOverlappingLabelsExcluding:(NSMutableArray *)exclude;
 - (void)checkAndUpdateOverlappingLabels;

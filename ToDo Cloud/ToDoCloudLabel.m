@@ -43,7 +43,18 @@
     [self checkAndUpdateOverlappingLabels];
 }
 
--(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    int length = [self.superview.subviews count];
+    int count=0;
+    while(count < length) {
+        UIView *element = [self.superview.subviews objectAtIndex:count];
+        count += 1;
+        if([element isKindOfClass: ToDoCloudLabel.class]) {
+            ToDoCloudLabel *checkLabel = (ToDoCloudLabel *)element;
+            checkLabel.velocity = CGPointZero;
+        }
+    }
+    
     CGPoint endPoint = [[touches anyObject] locationInView:self.superview];
     CGFloat tops = [self.superview viewWithTag:1].frame.origin.y - 8.0;
     if(CGRectContainsPoint([self.superview viewWithTag:1].frame, endPoint)) {
@@ -64,12 +75,12 @@
                              self.center = newCenter;
                          } 
                          completion:^(BOOL finished){
-                             NSLog(@"Done!");
+                             NSLog(@"Bounce Done!");
                          }];
     }
 }
 
-- (void) moveToCenter {
+- (void)moveToCenter {
     [self boundedMoveToNewCenter:visualCenter];
     [self checkAndUpdateOverlappingLabels];
 }
@@ -92,16 +103,26 @@
                ([exclude count] == 0 || ![exclude containsObject:checkLabel]) &&
                CGRectIntersectsRect(self.frame, checkLabel.frame)) {
                 // Push the overlapping label out
-                CGPoint newCenter = checkLabel.center;
-                newCenter.x += velocity.x;
-                newCenter.y += velocity.y;
-                // If there's no pushing, overlapping rectangles repel each other evenly
-                // TODO!
+                CGSize overlap = CGRectIntersection(self.frame, checkLabel.frame).size;
+                CGPoint shift;
+                if(abs(velocity.x) > abs(velocity.y)) {
+                    shift = CGPointMake(overlap.width*signum(velocity.x),0);
+                } else {
+                    shift = CGPointMake(0,overlap.height*signum(velocity.y));
+                }
+
+                // If moving the label hit a wall
+                CGPoint difference = [checkLabel boundedShiftBy:shift];
+                if(difference.x != 0 || difference.y != 0) {
+                    [self boundedMoveToNewCenter:CGPointMake(self.center.x - difference.x, self.center.y - difference.y)];
+                }
                 
-                // also: what if moving the label hit a wall
-                
-                
-                [checkLabel boundedMoveToNewCenter:newCenter];
+                /*else if(CGRectIntersectsRect(self.frame, checkLabel.frame)) {
+                    CGSize overlap = CGRectIntersection(self.frame, checkLabel.frame).size;
+                    CGPoint shift = CGPointMake(overlap.width/2, overlap.height/2);
+                    
+                    //[self boundedShiftBy:CGMakePoint(overlap.)];
+                }*/
                 
                 // add checklabel to the array and call it again.
                 [exclude addObject:checkLabel];
@@ -111,9 +132,12 @@
     }
 }
 
-
-- (void)boundedMoveToNewCenter:(CGPoint)newPoint {
-    BOOL hitBoundry = false;
+- (CGPoint)boundedShiftBy:(CGPoint)shiftFactor {
+    return [self boundedMoveToNewCenter:CGPointMake(self.center.x + shiftFactor.x, self.center.y + shiftFactor.y)];
+}
+// Returns the offset from the desired point
+- (CGPoint)boundedMoveToNewCenter:(CGPoint)newPoint {
+    CGPoint compare = newPoint;
     //--------------------------------------------------------
 	// Make sure we stay within the bounds of the parent view
 	//--------------------------------------------------------
@@ -121,22 +145,18 @@
 	// If too far right...
     if (newPoint.x > self.superview.bounds.size.width  - midPointX) {
         newPoint.x = self.superview.bounds.size.width - midPointX;
-        hitBoundry = true;
     } else if (newPoint.x < midPointX) {
         // If too far left...
         newPoint.x = midPointX;
-        hitBoundry = true;
     }
     
 	float midPointY = CGRectGetMidY(self.bounds);
     // If too far down...
 	if (newPoint.y > self.superview.bounds.size.height  - midPointY) {
         newPoint.y = self.superview.bounds.size.height - midPointY;
-        hitBoundry = true;
     } else if (newPoint.y < midPointY) {
         // If too far up...
         newPoint.y = midPointY;
-        hitBoundry = true;
     }
     velocity = CGPointMake(newPoint.x - self.center.x,newPoint.y - self.center.y);
     
@@ -144,6 +164,7 @@
 	self.center = newPoint;
     // update the font size
     [self updateFontSize];
+    return CGPointMake(compare.x - newPoint.x, compare.y - newPoint.y);
 }
 
 - (void)updateFontSize {

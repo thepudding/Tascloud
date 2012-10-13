@@ -15,8 +15,8 @@
 @interface ToDoCloudViewController : UIViewController <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *taskInput;
 @property (weak, nonatomic) IBOutlet UIView*taskField;
-@property (weak, nonatomic) IBOutlet UILabel *deleteArea;
-@property (weak, nonatomic) IBOutlet UILabel *completeArea;
+@property (weak, nonatomic) IBOutlet UIImageView *deleteArea;
+@property (weak, nonatomic) IBOutlet UIImageView *completeArea;
 
 @property (nonatomic) CGPoint visualCenter;
 - (IBAction)addTask:(id)sender;

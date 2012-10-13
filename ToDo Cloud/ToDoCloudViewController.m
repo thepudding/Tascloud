@@ -30,7 +30,6 @@
     completeArea.tag = 2;
     taskField.tag = 9001;
 }
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -61,6 +60,7 @@
     // TODO enter adds?
     if (taskInput == self.taskInput) {
         [theTextField resignFirstResponder];
+        [self addTask:self];
     }
     return YES;
 }
