@@ -17,5 +17,7 @@
 @property (nonatomic, assign) CGPoint visualCenter;
 @property (nonatomic, readonly) CGPoint velocity;
 - (id)initWithFrame:(CGRect)frame visualCenter:(CGPoint)visualCenter;
+- (void)checkAndUpdateOverlappingLabelsExcluding:(NSMutableArray *)exclude;
+- (void)checkAndUpdateOverlappingLabels;
 - (void)moveToCenter;
 @end

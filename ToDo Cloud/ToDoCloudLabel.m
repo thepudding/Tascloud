@@ -39,6 +39,8 @@
 	CGPoint newPoint = CGPointMake(self.center.x + (activePoint.x - currentPoint.x),
                                    self.center.y + (activePoint.y - currentPoint.y));
     [self boundedMoveToNewCenter:newPoint];
+    
+    [self checkAndUpdateOverlappingLabels];
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -69,31 +71,49 @@
 
 - (void) moveToCenter {
     [self boundedMoveToNewCenter:visualCenter];
+    [self checkAndUpdateOverlappingLabels];
 }
 
 - (void)checkAndUpdateOverlappingLabels {
+    //Ok you shouldn't have to do that ...
+    [self checkAndUpdateOverlappingLabelsExcluding:[[NSMutableArray alloc] init]];
+}
+
+- (void)checkAndUpdateOverlappingLabelsExcluding:(NSMutableArray *)exclude {
     int length = [self.superview.subviews count];
     int count=0;
     while(count < length) {
-        ToDoCloudLabel *checkLabel = [self.superview.subviews objectAtIndex:count];
+        UIView *element = [self.superview.subviews objectAtIndex:count];
         count += 1;
-        // Don't compare to itself, of course it overlaps!
-        if(checkLabel == self) {
-            //break;
-            // If the labels overlap:
-        } else if(CGRectIntersectsRect(self.frame, checkLabel.frame)) {
-            NSLog(@"HIT: %@, %@", self.text, checkLabel.text);
-            // Push the overlapping label out
-            CGPoint newCenter = CGPointMake(checkLabel.center.x + velocity.x, checkLabel.center.x + velocity.y);
-            // If there's no pushing, overlapping rectangles repel each other evenly
-            // TODO!
-            
-            [checkLabel boundedMoveToNewCenter:newCenter];
+        if([element isKindOfClass: ToDoCloudLabel.class]) {
+            ToDoCloudLabel *checkLabel = (ToDoCloudLabel *)element;
+            // Don't compare to itself delete or complete views.
+            if(checkLabel != self && checkLabel.tag != 1 && checkLabel.tag != 2 &&
+               ([exclude count] == 0 || ![exclude containsObject:checkLabel]) &&
+               CGRectIntersectsRect(self.frame, checkLabel.frame)) {
+                // Push the overlapping label out
+                CGPoint newCenter = checkLabel.center;
+                newCenter.x += velocity.x;
+                newCenter.y += velocity.y;
+                // If there's no pushing, overlapping rectangles repel each other evenly
+                // TODO!
+                
+                // also: what if moving the label hit a wall
+                
+                
+                [checkLabel boundedMoveToNewCenter:newCenter];
+                
+                // add checklabel to the array and call it again.
+                [exclude addObject:checkLabel];
+                [checkLabel checkAndUpdateOverlappingLabelsExcluding:exclude];
+            }
         }
     }
 }
 
+
 - (void)boundedMoveToNewCenter:(CGPoint)newPoint {
+    BOOL hitBoundry = false;
     //--------------------------------------------------------
 	// Make sure we stay within the bounds of the parent view
 	//--------------------------------------------------------
@@ -101,18 +121,22 @@
 	// If too far right...
     if (newPoint.x > self.superview.bounds.size.width  - midPointX) {
         newPoint.x = self.superview.bounds.size.width - midPointX;
+        hitBoundry = true;
     } else if (newPoint.x < midPointX) {
         // If too far left...
         newPoint.x = midPointX;
+        hitBoundry = true;
     }
     
 	float midPointY = CGRectGetMidY(self.bounds);
     // If too far down...
 	if (newPoint.y > self.superview.bounds.size.height  - midPointY) {
         newPoint.y = self.superview.bounds.size.height - midPointY;
+        hitBoundry = true;
     } else if (newPoint.y < midPointY) {
         // If too far up...
         newPoint.y = midPointY;
+        hitBoundry = true;
     }
     velocity = CGPointMake(newPoint.x - self.center.x,newPoint.y - self.center.y);
     
@@ -120,8 +144,6 @@
 	self.center = newPoint;
     // update the font size
     [self updateFontSize];
-    // update overlapping labels
-    [self checkAndUpdateOverlappingLabels];
 }
 
 - (void)updateFontSize {
@@ -142,13 +164,4 @@
                             newSize.height);
     self.font = newFont;
 }
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
-
 @end
