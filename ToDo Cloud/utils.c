@@ -9,4 +9,4 @@
 #include <stdio.h>
 
 int signum(int n) { return (n < 0) ? -1 : (n > 0) ? +1 : 0; }
-
+int signumF(float n) { return (n < 0) ? -1 : (n > 0) ? +1 : 0; }

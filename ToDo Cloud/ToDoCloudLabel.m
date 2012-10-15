@@ -105,12 +105,41 @@
                 // Push the overlapping label out
                 CGSize overlap = CGRectIntersection(self.frame, checkLabel.frame).size;
                 CGPoint shift;
-                if(abs(velocity.x) > abs(velocity.y)) {
-                    shift = CGPointMake(overlap.width*signum(velocity.x),0);
+                // Push along the X axis
+                /*
+                 If:
+                    the bottom of self falls within the y range of check
+                    or the top '' ''
+                 */
+                CGFloat minXPos = CGRectGetMinX(self.frame)-velocity.x;
+                CGFloat maxXPos = CGRectGetMaxX(self.frame)-velocity.x;
+                NSString *s;
+                if(//!(velocity.x > CGRectGetMidX(checkLabel.bounds)) &&
+                   ((minXPos > CGRectGetMinX(checkLabel.frame)&&
+                     minXPos < CGRectGetMaxX(checkLabel.frame)) ||
+                    (maxXPos > CGRectGetMinX(checkLabel.frame)&&
+                     maxXPos < CGRectGetMaxX(checkLabel.frame))))
+                {
+                    shift = CGPointMake(0,overlap.height*signumF(velocity.y));
+                    if(signumF(velocity.y) > 0) {
+                        s = @"v";
+                    } else if(signumF(velocity.y) < 0) {
+                        s = @"^";
+                    } else {
+                        s = [NSString stringWithFormat:@"...y: %f", velocity.y];
+                    }
+                // otherwise push along the x axis
                 } else {
-                    shift = CGPointMake(0,overlap.height*signum(velocity.y));
+                    shift = CGPointMake(overlap.width*signumF(velocity.x),0);
+                    if(signumF(velocity.x) > 0) {
+                        s = @">";
+                    } else if(signumF(velocity.x) < 0) {
+                        s = @"<";
+                    } else {
+                        s = [NSString stringWithFormat:@"...x: %f", velocity.x];
+                    }
                 }
-
+                NSLog(@"%@", s);
                 // If moving the label hit a wall
                 CGPoint difference = [checkLabel boundedShiftBy:shift];
                 if(difference.x != 0 || difference.y != 0) {

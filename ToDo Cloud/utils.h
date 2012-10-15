@@ -10,5 +10,5 @@
 #define ToDo_Cloud_utils_h
 
 int signum(int n);
-
+int signumF(float n);
 #endif
