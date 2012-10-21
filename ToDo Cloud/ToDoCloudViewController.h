@@ -19,5 +19,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *completeArea;
 
 @property (nonatomic) CGPoint visualCenter;
+- (void)saveState;
+- (void)restoreState;
 - (IBAction)addTask:(id)sender;
 @end

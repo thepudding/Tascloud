@@ -15,6 +15,25 @@
 @implementation ToDoCloudViewController
 @synthesize taskInput, taskField, visualCenter, deleteArea, completeArea;
 
+- (void)saveState {
+    NSMutableArray *save = [[NSMutableArray alloc] init];
+    for(UIView *element in taskField.subviews) {
+        if([element isKindOfClass: ToDoCloudLabel.class]) {
+            ToDoCloudLabel *label = (ToDoCloudLabel *)element;
+            [save addObject:label];
+        }
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:save forKey:@"save"];
+}
+
+
+- (void)restoreState {
+    for(ToDoCloudLabel *label in [[NSUserDefaults standardUserDefaults] objectForKey:@"save"]) {
+        [taskField addSubview:label];
+    }
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
