@@ -10,9 +10,30 @@
 
 @implementation ToDoCloudAppDelegate
 
+NSString *archiveFilepath; 
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [(ToDoCloudViewController *)self.window.rootViewController restoreState];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    archiveFilepath = [documentsDirectory stringByAppendingPathComponent:@"todos"];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:archiveFilepath])
+    {
+        // here, an archive already exists so we can populate a "people" array
+        // of the above value objects
+        
+        NSData *data = [[NSMutableData alloc] initWithContentsOfFile:archiveFilepath];
+        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+        [(ToDoCloudViewController *)self.window.rootViewController restoreStateWith:unarchiver];
+        [unarchiver finishDecoding];
+    } else {
+        // here, the archive didn't exist (first run), so instead, we just
+        // create a blank array for "people" which can be populated in our app
+        
+        people = [[NSMutableArray alloc] init];
+    }
+    
     // Override point for customization after application launch.
     return YES;
 }

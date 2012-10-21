@@ -11,7 +11,7 @@
 #define MAXIMUM_FONT_SIZE   40
 #define FONT_RESIZE_FACTOR  12.5
 
-@interface ToDoCloudLabel : UILabel {
+@interface ToDoCloudLabel : UILabel <NSCoding>{
     CGPoint currentPoint;
 }
 @property (nonatomic, assign) CGPoint visualCenter;

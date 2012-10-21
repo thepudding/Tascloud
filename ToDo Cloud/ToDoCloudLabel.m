@@ -12,6 +12,20 @@
 
 @synthesize visualCenter, velocity;
 
+-(void) encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.text forKey:@"textKey"];
+    [aCoder encodeCGPoint:self.center forKey:@"centerKey"];
+}
+
+-(id) initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super init]) {
+        self.text = [aDecoder decodeObjectForKey:@"textKey"];
+        self.center = [aDecoder decodeCGPointForKey:@"centerKey"];
+        self.velocity = CGPointMake(0, 0);
+    }
+    return self;
+}
+
 -(id) initWithFrame:(CGRect)frame visualCenter:(CGPoint)visualCenter {
     self = [self initWithFrame:frame];
     self.visualCenter = visualCenter;
