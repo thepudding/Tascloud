@@ -27,7 +27,7 @@
 }
 
 
-- (void)restoreState:(NSKeyedUnarchiver *)unarchiver {
+- (void)restoreStateWith:(NSKeyedUnarchiver *)unarchiver {
     for(ToDoCloudLabel *label in [[NSUserDefaults standardUserDefaults] objectForKey:@"tasks"]) {
         [taskField addSubview:label];
     }

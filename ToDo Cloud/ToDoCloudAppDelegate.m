@@ -14,16 +14,18 @@ NSString *archiveFilepath;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSLog(@"%@", @"application: didFinishLaunchingWithOptions:");
+    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    archiveFilepath = [documentsDirectory stringByAppendingPathComponent:@"todos"];
+    archiveFilepath = [documentsDirectory stringByAppendingPathComponent:@"tascloud.data"];
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:archiveFilepath])
     {
         // here, an archive already exists so we can populate a "people" array
         // of the above value objects
         
-        NSData *data = [[NSMutableData alloc] initWithContentsOfFile:archiveFilepath];
+        NSMutableData *data = [[NSMutableData alloc] initWithContentsOfFile:archiveFilepath];
         NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
         [(ToDoCloudViewController *)self.window.rootViewController restoreStateWith:unarchiver];
         [unarchiver finishDecoding];
@@ -47,6 +49,7 @@ NSString *archiveFilepath;
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    [self applicationWillTerminate:application];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -61,6 +64,7 @@ NSString *archiveFilepath;
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+    NSLog(@"%@", @"applicationWillTerminate:");
     NSMutableData *data;
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground
     if ([[NSFileManager defaultManager] fileExistsAtPath:archiveFilepath])
