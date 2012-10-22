@@ -27,11 +27,10 @@ NSString *archiveFilepath;
         NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
         [(ToDoCloudViewController *)self.window.rootViewController restoreStateWith:unarchiver];
         [unarchiver finishDecoding];
+        NSLog(@"Loaded: [%@]\nTo: %@", data, archiveFilepath);
     } else {
         // here, the archive didn't exist (first run), so instead, we just
         // create a blank array for "people" which can be populated in our app
-        
-        people = [[NSMutableArray alloc] init];
     }
     
     // Override point for customization after application launch.
@@ -62,8 +61,22 @@ NSString *archiveFilepath;
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    [(ToDoCloudViewController *)self.window.rootViewController saveState];
+    NSMutableData *data;
+    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground
+    if ([[NSFileManager defaultManager] fileExistsAtPath:archiveFilepath])
+    {
+        // here, an archive already exists so we can populate a "people" array
+        // of the above value objects
+        data = [[NSMutableData alloc] initWithContentsOfFile:archiveFilepath];
+    } else {
+        data = [[NSMutableData alloc] initWithLength:0];
+    }
+        
+    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+    [(ToDoCloudViewController *)self.window.rootViewController saveStateWith:archiver];
+    [archiver finishEncoding];
+    [data writeToFile:archiveFilepath atomically:YES];
+    NSLog(@"Saved: [%@]\nTo: %@", data, archiveFilepath);
 }
 
 @end
