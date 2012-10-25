@@ -22,6 +22,10 @@
         self.text = [aDecoder decodeObjectForKey:@"textKey"];
         self.center = [aDecoder decodeCGPointForKey:@"centerKey"];
         self.velocity = CGPointMake(0, 0);
+        self.userInteractionEnabled = true;
+        self.backgroundColor = [UIColor clearColor];
+        self.textColor = [UIColor colorWithWhite: 0.13 alpha:1];
+        [self updateFontSize];
     }
     return self;
 }

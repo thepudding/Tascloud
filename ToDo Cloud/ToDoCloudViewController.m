@@ -15,6 +15,8 @@
 @implementation ToDoCloudViewController
 @synthesize taskInput, taskField, visualCenter, deleteArea, completeArea;
 
+NSArray *loggedTasks;
+
 - (void)saveStateWith:(NSKeyedArchiver *)archiver {
     NSMutableArray *save = [[NSMutableArray alloc] init];
     for(UIView *element in taskField.subviews) {
@@ -28,9 +30,7 @@
 
 
 - (void)restoreStateWith:(NSKeyedUnarchiver *)unarchiver {
-    for(ToDoCloudLabel *label in [[NSUserDefaults standardUserDefaults] objectForKey:@"tasks"]) {
-        [taskField addSubview:label];
-    }
+    loggedTasks = [unarchiver decodeObjectForKey:@"tasks"];
 }
 
 
@@ -48,6 +48,12 @@
     deleteArea.tag = 1;
     completeArea.tag = 2;
     taskField.tag = 9001;
+    if(loggedTasks) {
+        for(ToDoCloudLabel *label in loggedTasks) {
+            label.visualCenter = self.visualCenter;
+            [taskField addSubview:label];
+        }
+    }
 }
 - (void)didReceiveMemoryWarning
 {
