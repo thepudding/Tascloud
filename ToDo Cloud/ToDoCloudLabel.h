@@ -20,4 +20,5 @@
 - (void)checkAndUpdateOverlappingLabelsExcluding:(NSMutableArray *)exclude;
 - (void)checkAndUpdateOverlappingLabels;
 - (void)moveToCenter;
+- (void)updateFontSize;
 @end

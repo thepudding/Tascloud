@@ -51,6 +51,7 @@ NSArray *loggedTasks;
     if(loggedTasks) {
         for(ToDoCloudLabel *label in loggedTasks) {
             label.visualCenter = self.visualCenter;
+            [label updateFontSize];
             [taskField addSubview:label];
         }
     }
