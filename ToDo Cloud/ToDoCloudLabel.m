@@ -10,18 +10,30 @@
 
 @implementation ToDoCloudLabel
 
-@synthesize visualCenter, velocity;
-
--(void) encodeWithCoder:(NSCoder *)aCoder {
+@synthesize visualCenter, lastPushedDirection, anchor;
+////////
+// NSCoder implementation
+////////
+-(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.text forKey:@"textKey"];
     [aCoder encodeCGPoint:self.center forKey:@"centerKey"];
 }
+-(id)initWithCoder:(NSCoder *)aDecoder {
+    return [self initWithText: [aDecoder decodeObjectForKey:@"textKey"] center:[aDecoder decodeCGPointForKey:@"centerKey"]];
+}
 
--(id) initWithCoder:(NSCoder *)aDecoder {
+////////
+// Initializers
+////////
+- (id)initAtCenterWithText:(NSString *)text withVisualCenter:(CGPoint)vc {
+    self.visualCenter = vc;
+    return [self initWithText:text center:vc];
+}
+- (id)initWithText:(NSString *)text center:(CGPoint)center {
     if (self = [super init]) {
-        self.text = [aDecoder decodeObjectForKey:@"textKey"];
-        self.center = [aDecoder decodeCGPointForKey:@"centerKey"];
-        self.velocity = CGPointMake(0, 0);
+        self.text = text;
+        self.center = center;
+        self.anchor = [self frameAtPosition:center];
         self.userInteractionEnabled = true;
         self.backgroundColor = [UIColor clearColor];
         self.textColor = [UIColor colorWithWhite: 0.13 alpha:1];
@@ -29,26 +41,22 @@
     return self;
 }
 
--(id) initWithFrame:(CGRect)frame visualCenter:(CGPoint)visualCenter {
-    self = [self initWithFrame:frame];
-    self.visualCenter = visualCenter;
-    return self;
+////////
+// Accessors
+////////
+- (void)setVisualCenter:(CGPoint)vc {
+    visualCenter = vc;
+    [self updateFontSize];
 }
 
-- (id) initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        velocity = CGPointMake(0.0, 0.0);
-    }
-    return self;
-}
-
-- (void) touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
+////////
+// Touch Events
+////////
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
 	// When a touch starts, get the current location in the view
 	currentPoint = [[touches anyObject] locationInView:self];
 }
-
-- (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
+- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
 	// Get active location upon move
 	CGPoint activePoint = [[touches anyObject] locationInView:self];
     
@@ -56,31 +64,26 @@
 	CGPoint newPoint = CGPointMake(self.center.x + (activePoint.x - currentPoint.x),
                                    self.center.y + (activePoint.y - currentPoint.y));
     [self boundedMoveToNewCenter:newPoint];
+    self.anchor = self.frame;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Task Moved" object:self];
     
-    [self checkAndUpdateOverlappingLabels];
+    //[self.superview updateIntersenctingLabelsOf:self];
 }
-
--(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    int length = [self.superview.subviews count];
-    int count=0;
-    while(count < length) {
-        UIView *element = [self.superview.subviews objectAtIndex:count];
-        count += 1;
-        if([element isKindOfClass: ToDoCloudLabel.class]) {
-            ToDoCloudLabel *checkLabel = (ToDoCloudLabel *)element;
-            checkLabel.velocity = CGPointZero;
-        }
-    }
-    
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    // The point in taskField when the touch ended
     CGPoint endPoint = [[touches anyObject] locationInView:self.superview];
+    
     CGFloat tops = [self.superview viewWithTag:1].frame.origin.y - 8.0;
+    // Check for delete
     if(CGRectContainsPoint([self.superview viewWithTag:1].frame, endPoint)) {
         [self removeFromSuperview];
         NSLog(@"Deleted: %@", self.text);
+    // Check for Complete
     } else if(CGRectContainsPoint([self.superview viewWithTag:2].frame, endPoint)) {
         [self removeFromSuperview];
         //TODO: store the completed ones somewhere. WHERE? who knows!
         NSLog(@"Completed: %@", self.text);
+    // Check for bounce
     } else if(self.frame.origin.y + self.frame.size.height > tops) {
         //bounce up!
         CGPoint newCenter = CGPointMake(self.center.x, tops - (self.frame.size.height/2.0));
@@ -94,96 +97,67 @@
                          completion:^(BOOL finished){
                              NSLog(@"Bounce Done!");
                          }];
+        [self updateFontSize];
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Task Move Finished" object:self];
 }
 
-- (void)moveToCenter {
-    [self boundedMoveToNewCenter:visualCenter];
-    [self checkAndUpdateOverlappingLabels];
-}
-
-- (void)checkAndUpdateOverlappingLabels {
-    //Ok you shouldn't have to do that ...
-    [self checkAndUpdateOverlappingLabelsExcluding:[[NSMutableArray alloc] init]];
-}
-
-- (void)checkAndUpdateOverlappingLabelsExcluding:(NSMutableArray *)exclude {
-    int length = [self.superview.subviews count];
-    int count=0;
-    while(count < length) {
-        UIView *element = [self.superview.subviews objectAtIndex:count];
-        count += 1;
-        if([element isKindOfClass: ToDoCloudLabel.class]) {
-            ToDoCloudLabel *checkLabel = (ToDoCloudLabel *)element;
-            // Don't compare to itself delete or complete views.
-            if(checkLabel != self && checkLabel.tag != 1 && checkLabel.tag != 2 &&
-               ([exclude count] == 0 || ![exclude containsObject:checkLabel]) &&
-               CGRectIntersectsRect(self.frame, checkLabel.frame)) {
-                // Push the overlapping label out
-                CGSize overlap = CGRectIntersection(self.frame, checkLabel.frame).size;
-                CGPoint shift;
-                // Push along the X axis
-                /*
-                 If:
-                    the bottom of self falls within the y range of check
-                    or the top '' ''
-                 */
-                CGFloat minXPos = CGRectGetMinX(self.frame)-velocity.x;
-                CGFloat maxXPos = CGRectGetMaxX(self.frame)-velocity.x;
-                NSString *s;
-                if(//!(velocity.x > CGRectGetMidX(checkLabel.bounds)) &&
-                   ((minXPos > CGRectGetMinX(checkLabel.frame)&&
-                     minXPos < CGRectGetMaxX(checkLabel.frame)) ||
-                    (maxXPos > CGRectGetMinX(checkLabel.frame)&&
-                     maxXPos < CGRectGetMaxX(checkLabel.frame))))
-                {
-                    shift = CGPointMake(0,overlap.height*signumF(velocity.y));
-                    if(signumF(velocity.y) > 0) {
-                        s = @"v";
-                    } else if(signumF(velocity.y) < 0) {
-                        s = @"^";
-                    } else {
-                        s = [NSString stringWithFormat:@"...y: %f", velocity.y];
-                    }
-                // otherwise push along the x axis
-                } else {
-                    shift = CGPointMake(overlap.width*signumF(velocity.x),0);
-                    if(signumF(velocity.x) > 0) {
-                        s = @">";
-                    } else if(signumF(velocity.x) < 0) {
-                        s = @"<";
-                    } else {
-                        s = [NSString stringWithFormat:@"...x: %f", velocity.x];
-                    }
-                }
-                NSLog(@"%@", s);
-                // If moving the label hit a wall
-                CGPoint difference = [checkLabel boundedShiftBy:shift];
-                if(difference.x != 0 || difference.y != 0) {
-                    [self boundedMoveToNewCenter:CGPointMake(self.center.x - difference.x, self.center.y - difference.y)];
-                }
-                
-                /*else if(CGRectIntersectsRect(self.frame, checkLabel.frame)) {
-                    CGSize overlap = CGRectIntersection(self.frame, checkLabel.frame).size;
-                    CGPoint shift = CGPointMake(overlap.width/2, overlap.height/2);
-                    
-                    //[self boundedShiftBy:CGMakePoint(overlap.)];
-                }*/
-                
-                // add checklabel to the array and call it again.
-                [exclude addObject:checkLabel];
-                [checkLabel checkAndUpdateOverlappingLabelsExcluding:exclude];
-            }
+// returns the direction that pushedView should be pushed in to remove overlap
+- (Direction)pushDirectionFor:(ToDoCloudLabel *)pushedLabel {
+    Direction d = {0,0};
+    
+    if(CGRectIntersectsRect(previousPosition, pushedLabel.frame)) {
+        return lastPushedDirection;
+    }
+    float xVelocity = self.center.x - CGRectGetMidX(previousPosition);
+    float yVelocity = self.center.y - CGRectGetMidY(previousPosition);
+    if(fabs(xVelocity) - fabs(yVelocity) > 5) {
+        return (Direction){signumF(xVelocity), 0};
+    } else if (fabs(yVelocity) - fabs(xVelocity) > 5) {
+        return (Direction){0, signumF(yVelocity)};
+    }
+    // differences in centers of two views
+    float xDiff = pushedLabel.center.x - CGRectGetMidX(previousPosition);
+    float yDiff = pushedLabel.center.y - CGRectGetMidY(previousPosition);
+    // A rectangle equal to the prevPos but aligned with pushedView.center on x and y axis respectively
+    CGRect xAlign = CGRectOffset(previousPosition, xDiff, 0);
+    CGRect yAlign = CGRectOffset(previousPosition, 0, yDiff);
+    
+    // Push along X if
+    if(CGRectIntersectsRect(pushedLabel.frame, xAlign)) {
+        d.x = signumF(xDiff);
+    // otherwise push along y if
+    } else if(CGRectIntersectsRect(pushedLabel.frame, yAlign)) {
+        d.y = signumF(yDiff);
+    // if they don't overlap at all, just use the direction with more force
+    } else {
+        if(xVelocity > yVelocity) {
+            d.x = signumF(xDiff);
+        } else {
+            d.y = signumF(yDiff);
         }
     }
+    pushedLabel.lastPushedDirection = d;
+    return d;
 }
 
-- (CGPoint)boundedShiftBy:(CGPoint)shiftFactor {
-    return [self boundedMoveToNewCenter:CGPointMake(self.center.x + shiftFactor.x, self.center.y + shiftFactor.y)];
+- (CGPoint)getShift {
+    return CGPointMake(self.center.x - CGRectGetMidX(previousPosition),
+                       self.center.y - CGRectGetMidY(previousPosition));
+}
+
+////////
+// Movement Methods
+////////
+- (void)moveToCenter {
+    [self boundedMoveToNewCenter:visualCenter];
+}
+- (void)boundedShiftBy:(CGPoint)shiftFactor {
+    [self boundedMoveToNewCenter:CGPointMake(self.center.x + shiftFactor.x, self.center.y + shiftFactor.y)];
 }
 // Returns the offset from the desired point
-- (CGPoint)boundedMoveToNewCenter:(CGPoint)newPoint {
-    CGPoint compare = newPoint;
+- (void)boundedMoveToNewCenter:(CGPoint)newPoint {
+    previousPosition = self.frame;
     //--------------------------------------------------------
 	// Make sure we stay within the bounds of the parent view
 	//--------------------------------------------------------
@@ -204,16 +178,29 @@
         // If too far up...
         newPoint.y = midPointY;
     }
-    velocity = CGPointMake(newPoint.x - self.center.x,newPoint.y - self.center.y);
     
 	// Set new center location
 	self.center = newPoint;
     // update the font size
     [self updateFontSize];
-    return CGPointMake(compare.x - newPoint.x, compare.y - newPoint.y);
 }
-
-- (void)updateFontSize {
+- (void)snapToAnchor {
+    self.bounds = (CGRect){CGPointZero, self.anchor.size};
+    [UIView animateWithDuration:0.25
+                          delay:0
+                        options: UIViewAnimationCurveEaseIn
+                     animations:^{
+                         self.frame = anchor;
+                         [self updateFontSize];
+                     }
+                     completion:^(BOOL finished){
+                         [self updateFontSize];
+                     }];
+}
+////////
+// Resize
+////////
+- (UIFont *)fontForPosition:(CGPoint)pos {
     CGFloat xDist = (self.visualCenter.x - self.center.x);
     CGFloat yDist = (self.visualCenter.y - self.center.y);
     CGFloat distance = sqrt((xDist * xDist) + (yDist * yDist));
@@ -223,10 +210,21 @@
         fontSize = MINIMUM_FONT_SIZE;
     }
     
-    UIFont *newFont = [UIFont fontWithName:@"GillSans-Light" size:fontSize];
+    return [UIFont fontWithName:@"GillSans-Light" size:fontSize];
+}
+- (CGRect)frameAtPosition:(CGPoint)pos {
+    UIFont *newFont = [self fontForPosition:self.center];
     CGSize newSize = [self.text sizeWithFont:newFont];
-    self.frame = CGRectMake(self.frame.origin.x,
-                            self.frame.origin.y,
+    return CGRectMake(self.center.x - newSize.width/2,
+                      self.center.y - newSize.height/2,
+                      newSize.width,
+                      newSize.height);
+}
+- (void)updateFontSize {
+    UIFont *newFont = [self fontForPosition:self.center];
+    CGSize newSize = [self.text sizeWithFont:newFont];
+    self.frame = CGRectMake(self.center.x - newSize.width/2,
+                            self.center.y - newSize.height/2,
                             newSize.width,
                             newSize.height);
     self.font = newFont;
