@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ToDoCloudLabel.h"
+#import "ToDoCloudDeleteActionDelegate.h"
 
 // TODO this shouldn't be hard coded
 #define BUTTONS_HEIGHT 41

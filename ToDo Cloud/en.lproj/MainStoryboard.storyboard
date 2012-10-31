@@ -101,6 +101,21 @@
         <image name="tascloudicon_trashhighres.png" width="40" height="40"/>
         <image name="tascloudwallpaper_softhighres.png" width="640" height="960"/>
     </resources>
+    <classes>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="ToDoCloudViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ToDoCloudViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="addTask:"/>
+                <relationship kind="outlet" name="completeArea" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="deleteArea" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="taskField" candidateClass="UIView"/>
+                <relationship kind="outlet" name="taskInput" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

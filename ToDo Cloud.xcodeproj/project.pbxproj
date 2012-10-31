@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17BC97701640A8C00043E295 /* ToDoCloudDeleteActionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 17BC976F1640A8C00043E295 /* ToDoCloudDeleteActionDelegate.m */; };
 		FA7E3B08162A037F00E4F46D /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = FA7E3B07162A037F00E4F46D /* utils.c */; };
 		FA7E3B1D162A0A9500E4F46D /* tascloudbutton_addwithcloudhighres.png in Resources */ = {isa = PBXBuildFile; fileRef = FA7E3B0D162A0A9500E4F46D /* tascloudbutton_addwithcloudhighres.png */; };
 		FA7E3B1E162A0A9500E4F46D /* tascloudbutton_addwithoutcloudhighres.png in Resources */ = {isa = PBXBuildFile; fileRef = FA7E3B0E162A0A9500E4F46D /* tascloudbutton_addwithoutcloudhighres.png */; };
@@ -34,6 +35,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		17BC976E1640A8C00043E295 /* ToDoCloudDeleteActionDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToDoCloudDeleteActionDelegate.h; sourceTree = "<group>"; };
+		17BC976F1640A8C00043E295 /* ToDoCloudDeleteActionDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToDoCloudDeleteActionDelegate.m; sourceTree = "<group>"; };
 		FA7E3B07162A037F00E4F46D /* utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utils.c; sourceTree = "<group>"; };
 		FA7E3B09162A05E600E4F46D /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		FA7E3B0D162A0A9500E4F46D /* tascloudbutton_addwithcloudhighres.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tascloudbutton_addwithcloudhighres.png; sourceTree = "<group>"; };
@@ -152,6 +155,8 @@
 				FAD725E21623E8F0008028F2 /* MainStoryboard.storyboard */,
 				FAD725E51623E8F0008028F2 /* ToDoCloudViewController.h */,
 				FAD725E61623E8F0008028F2 /* ToDoCloudViewController.m */,
+				17BC976E1640A8C00043E295 /* ToDoCloudDeleteActionDelegate.h */,
+				17BC976F1640A8C00043E295 /* ToDoCloudDeleteActionDelegate.m */,
 				FAD725D11623E8F0008028F2 /* Supporting Files */,
 				FAD726EC1624DBD5008028F2 /* ToDoCloudLabel.h */,
 				FAD726ED1624DBD5008028F2 /* ToDoCloudLabel.m */,
@@ -257,6 +262,7 @@
 				FAD725E71623E8F0008028F2 /* ToDoCloudViewController.m in Sources */,
 				FAD726EE1624DBD6008028F2 /* ToDoCloudLabel.m in Sources */,
 				FA7E3B08162A037F00E4F46D /* utils.c in Sources */,
+				17BC97701640A8C00043E295 /* ToDoCloudDeleteActionDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

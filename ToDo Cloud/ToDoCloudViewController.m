@@ -15,6 +15,9 @@
 @implementation ToDoCloudViewController
 @synthesize taskInput, taskField, visualCenter, deleteArea, completeArea;
 
+UIActionSheet *deleteConfirmation;
+
+
 /*
  * Data persistence
  */
@@ -38,6 +41,8 @@ NSArray *loggedTasks;
 
 
 - (void)viewDidAppear:(BOOL)animated {
+    deleteConfirmation = [[UIActionSheet alloc] initWithTitle:@"confirm" delegate:[[ToDoCloudDeleteActionDelegate alloc] init] cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:nil];
+    
     [super viewDidAppear:animated];
     
     self.visualCenter = CGPointMake(CGRectGetMidX(taskField.bounds),
