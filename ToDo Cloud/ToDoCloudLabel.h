@@ -16,7 +16,7 @@ typedef struct {
     int    y;
 } Direction;
 
-@interface ToDoCloudLabel : UILabel <NSCoding>{
+@interface ToDoCloudLabel : UILabel <NSCoding, UIActionSheetDelegate>{
     CGPoint currentPoint;
     CGRect previousPosition;
 }
@@ -37,4 +37,7 @@ typedef struct {
 - (void)boundedMoveToNewCenter:(CGPoint)newPoint;
 - (void)snapToAnchor;
 - (void)updateFontSize;
+
+
+-(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 @end

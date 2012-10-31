@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "ToDoCloudLabel.h"
-#import "ToDoCloudDeleteActionDelegate.h"
 
 // TODO this shouldn't be hard coded
 #define BUTTONS_HEIGHT 41
@@ -23,5 +22,4 @@
 - (void)saveStateWith:(NSKeyedArchiver *)archiver;
 - (void)restoreStateWith:(NSKeyedUnarchiver *)unarchiver;
 - (IBAction)addTask:(id)sender;
-
 @end

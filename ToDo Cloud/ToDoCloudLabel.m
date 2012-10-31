@@ -76,30 +76,18 @@
     CGFloat tops = [self.superview viewWithTag:1].frame.origin.y - 8.0;
     // Check for delete
     if(CGRectContainsPoint([self.superview viewWithTag:1].frame, endPoint)) {
-        [self removeFromSuperview];
-        NSLog(@"Deleted: %@", self.text);
+        [self showDeleteActionSheet];
     // Check for Complete
     } else if(CGRectContainsPoint([self.superview viewWithTag:2].frame, endPoint)) {
         [self removeFromSuperview];
         //TODO: store the completed ones somewhere. WHERE? who knows!
-        NSLog(@"Completed: %@", self.text);
+        NSLog(@"Completed");
     // Check for bounce
     } else if(self.frame.origin.y + self.frame.size.height > tops) {
         //bounce up!
-        CGPoint newCenter = CGPointMake(self.center.x, tops - (self.frame.size.height/2.0));
-        CGFloat duration = 1.0 - (self.center.y - newCenter.y)/55.0;
-        [UIView animateWithDuration:0.25 + 0.25*duration
-                              delay:0
-                            options: UIViewAnimationCurveEaseIn
-                         animations:^{
-                             self.center = newCenter;
-                         } 
-                         completion:^(BOOL finished){
-                             NSLog(@"Bounce Done!");
-                         }];
-        [self updateFontSize];
+        [self bounceAwayFromBottom];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Task Move Finished" object:self];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"Task Move Finished" object:self];
 }
 
 // returns the direction that pushedView should be pushed in to remove overlap
@@ -154,6 +142,21 @@
 }
 - (void)boundedShiftBy:(CGPoint)shiftFactor {
     [self boundedMoveToNewCenter:CGPointMake(self.center.x + shiftFactor.x, self.center.y + shiftFactor.y)];
+}
+- (void)bounceAwayFromBottom {
+    CGFloat tops = [self.superview viewWithTag:1].frame.origin.y - 8.0;
+    CGPoint newCenter = CGPointMake(self.center.x, tops - (self.frame.size.height/2.0));
+    CGFloat duration = 1.0 - (self.center.y - newCenter.y)/55.0;
+    [UIView animateWithDuration:0.25 + 0.25*duration
+                          delay:0
+                        options: UIViewAnimationCurveEaseIn
+                     animations:^{
+                         self.center = newCenter;
+                     }
+                     completion:^(BOOL finished){
+                         NSLog(@"Bounce Done!");
+                     }];
+    [self updateFontSize];
 }
 // Returns the offset from the desired point
 - (void)boundedMoveToNewCenter:(CGPoint)newPoint {
@@ -228,5 +231,23 @@
                             newSize.width,
                             newSize.height);
     self.font = newFont;
+}
+////////
+// Delete Dialogue
+////////
+-(void)showDeleteActionSheet{
+    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:@"confirm" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:nil];
+    popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    [popupQuery showInView:self.superview];
+}
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) {
+        case 0:
+            [self removeFromSuperview];
+            break;
+        case 1:
+            [self bounceAwayFromBottom];
+            break;
+    }
 }
 @end

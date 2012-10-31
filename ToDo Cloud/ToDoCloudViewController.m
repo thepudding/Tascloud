@@ -41,7 +41,6 @@ NSArray *loggedTasks;
 
 
 - (void)viewDidAppear:(BOOL)animated {
-    deleteConfirmation = [[UIActionSheet alloc] initWithTitle:@"confirm" delegate:[[ToDoCloudDeleteActionDelegate alloc] init] cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete" otherButtonTitles:nil];
     
     [super viewDidAppear:animated];
     
@@ -123,7 +122,6 @@ NSArray *loggedTasks;
     }
 }
 - (void)taskMoveFinished:(NSNotification *)notification {
-	ToDoCloudLabel *fTask = [notification object];
     for(UIView *element in taskField.subviews) {
         // Don't bother unless they are intersecting
         if([element isKindOfClass:ToDoCloudLabel.class]) {
