@@ -8,6 +8,36 @@
 
 #import "ToDoCloudLabel.h"
 
+NSString* NSStringFromDirection(Direction d) {
+    if(d.x == 0 && d.y == 0) {
+        return @".";
+    }
+    
+    if(d.x == 0) {
+        if(d.y > 0) {
+            return @"v";
+        } else {
+            return @"^";
+        }
+    } else if(d.y == 0) {
+        if(d.x > 0) {
+            return @">";
+        } else {
+            return @"<";
+        }
+    } else {
+        return @"?";
+    }
+}
+
+BOOL directionIsZero(Direction d) {
+    return d.x == 0 && d.y == 0;
+}
+
+Direction inverseDirection(Direction d) {
+    return (Direction){-1*d.x, -1*d.y};
+}
+
 @implementation ToDoCloudLabel
 
 @synthesize visualCenter, lastPushedDirection, anchor;
@@ -35,7 +65,7 @@
         self.center = center;
         self.anchor = [self frameAtPosition:center];
         self.userInteractionEnabled = true;
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor redColor];
         self.textColor = [UIColor colorWithWhite: 0.13 alpha:1];
     }
     return self;
@@ -94,36 +124,61 @@
 - (Direction)pushDirectionFor:(ToDoCloudLabel *)pushedLabel {
     Direction d = {0,0};
     
-    if(CGRectIntersectsRect(previousPosition, pushedLabel.frame)) {
-        return lastPushedDirection;
-    }
     float xVelocity = self.center.x - CGRectGetMidX(previousPosition);
     float yVelocity = self.center.y - CGRectGetMidY(previousPosition);
-    if(fabs(xVelocity) - fabs(yVelocity) > 5) {
-        return (Direction){signumF(xVelocity), 0};
-    } else if (fabs(yVelocity) - fabs(xVelocity) > 5) {
-        return (Direction){0, signumF(yVelocity)};
-    }
-    // differences in centers of two views
-    float xDiff = pushedLabel.center.x - CGRectGetMidX(previousPosition);
-    float yDiff = pushedLabel.center.y - CGRectGetMidY(previousPosition);
-    // A rectangle equal to the prevPos but aligned with pushedView.center on x and y axis respectively
-    CGRect xAlign = CGRectOffset(previousPosition, xDiff, 0);
-    CGRect yAlign = CGRectOffset(previousPosition, 0, yDiff);
-    
-    // Push along X if
-    if(CGRectIntersectsRect(pushedLabel.frame, xAlign)) {
-        d.x = signumF(xDiff);
-    // otherwise push along y if
-    } else if(CGRectIntersectsRect(pushedLabel.frame, yAlign)) {
-        d.y = signumF(yDiff);
-    // if they don't overlap at all, just use the direction with more force
-    } else {
-        if(xVelocity > yVelocity) {
-            d.x = signumF(xDiff);
+    if(CGRectIntersectsRect(previousPosition, pushedLabel.frame)) {
+        if(directionIsZero(pushedLabel.lastPushedDirection)) {
+            if(xVelocity == 0 && yVelocity == 0) {
+                CGSize s = CGRectIntersection(previousPosition, pushedLabel.frame).size;
+                if(s.width > s.height) {
+                    if(CGRectGetMidX(previousPosition) > CGRectGetMidX(pushedLabel.frame)) {
+                        d.x = -1;
+                    } else {
+                        d.x = 1;
+                    }
+                } else {
+                    if(CGRectGetMidY(previousPosition) > CGRectGetMidY(pushedLabel.frame)) {
+                        d.y = -1;
+                    } else {
+                        d.y = 1;
+                    }
+                }
+            } else if(fabs(xVelocity) > fabs(yVelocity)) {
+                d.x = signumF(xVelocity);
+            } else {
+                d.y = signumF(yVelocity);
+            }
         } else {
-            d.y = signumF(yDiff);
+            return pushedLabel.lastPushedDirection;
         }
+    } else {
+        // differences in centers of two views
+        float xDiff = pushedLabel.center.x - CGRectGetMidX(previousPosition);
+        float yDiff = pushedLabel.center.y - CGRectGetMidY(previousPosition);
+        // A rectangle equal to the prevPos but aligned with pushedView.center on x and y axis respectively
+        CGRect xAlign = CGRectOffset(previousPosition, xDiff, 0);
+        CGRect yAlign = CGRectOffset(previousPosition, 0, yDiff);
+        
+        // Push along X if
+        if(CGRectIntersectsRect(pushedLabel.frame, xAlign)) {
+            d.x = signumF(xDiff);
+            // otherwise push along y if
+        } else if(CGRectIntersectsRect(pushedLabel.frame, yAlign)) {
+            d.y = signumF(yDiff);
+            // if they don't overlap at all, just use the direction with more force
+        } else {
+            if(xVelocity > yVelocity) {
+                d.x = signumF(xDiff);
+            } else {
+                d.y = signumF(yDiff);
+            }
+        }
+    }
+    if(directionIsZero(d)) {
+        NSException *exception = [NSException exceptionWithName: @"DirectionUndetermined"
+                                                         reason: @"pushDirectionFor should never return {0,0}"
+                                                       userInfo: nil];
+        @throw exception;
     }
     pushedLabel.lastPushedDirection = d;
     return d;
@@ -137,11 +192,11 @@
 ////////
 // Movement Methods
 ////////
-- (void)moveToCenter {
-    [self boundedMoveToNewCenter:visualCenter];
+- (BOOL)moveToCenter {
+    return [self boundedMoveToNewCenter:visualCenter];
 }
-- (void)boundedShiftBy:(CGPoint)shiftFactor {
-    [self boundedMoveToNewCenter:CGPointMake(self.center.x + shiftFactor.x, self.center.y + shiftFactor.y)];
+- (BOOL)boundedShiftBy:(CGPoint)shiftFactor {
+    return [self boundedMoveToNewCenter:CGPointMake(self.center.x + shiftFactor.x, self.center.y + shiftFactor.y)];
 }
 - (void)bounceAwayFromBottom {
     CGFloat tops = [self.superview viewWithTag:1].frame.origin.y - 8.0;
@@ -159,7 +214,8 @@
     [self updateFontSize];
 }
 // Returns the offset from the desired point
-- (void)boundedMoveToNewCenter:(CGPoint)newPoint {
+- (BOOL)boundedMoveToNewCenter:(CGPoint)newPoint {
+    BOOL hitBounds = false;
     previousPosition = self.frame;
     //--------------------------------------------------------
 	// Make sure we stay within the bounds of the parent view
@@ -167,8 +223,10 @@
     float midPointX = CGRectGetMidX(self.bounds);
 	// If too far right...
     if (newPoint.x > self.superview.bounds.size.width  - midPointX) {
+        hitBounds = true;
         newPoint.x = self.superview.bounds.size.width - midPointX;
     } else if (newPoint.x < midPointX) {
+        hitBounds = true;
         // If too far left...
         newPoint.x = midPointX;
     }
@@ -176,8 +234,10 @@
 	float midPointY = CGRectGetMidY(self.bounds);
     // If too far down...
 	if (newPoint.y > self.superview.bounds.size.height  - midPointY) {
+        hitBounds = true;
         newPoint.y = self.superview.bounds.size.height - midPointY;
     } else if (newPoint.y < midPointY) {
+        hitBounds = true;
         // If too far up...
         newPoint.y = midPointY;
     }
@@ -186,6 +246,7 @@
 	self.center = newPoint;
     // update the font size
     [self updateFontSize];
+    return hitBounds;
 }
 - (void)snapToAnchor {
     self.bounds = (CGRect){CGPointZero, self.anchor.size};

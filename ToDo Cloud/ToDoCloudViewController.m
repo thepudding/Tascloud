@@ -76,6 +76,9 @@ NSArray *loggedTasks;
         ToDoCloudLabel *label = [[ToDoCloudLabel alloc] initAtCenterWithText:taskInput.text
                                                             withVisualCenter: visualCenter];
         [taskField addSubview:label];
+        [label moveToCenter];
+        [self pushTasksWith:label];
+        [self anchorTasks];
     }
     
     // Clear the contents of the text box
@@ -97,7 +100,9 @@ NSArray *loggedTasks;
 
 - (void)taskMoved:(NSNotification *)notification {
 	ToDoCloudLabel *task = [notification object];
-    
+    [self pushTasksWith:task];
+}
+- (void)pushTasksWith:(ToDoCloudLabel *)task {
     // Iterate over labels intersecting task
     for(UIView *element in taskField.subviews) {
         // Don't bother unless they are intersecting
@@ -111,17 +116,28 @@ NSArray *loggedTasks;
             } else {
                 Direction pushDirection = [task pushDirectionFor: pushedTask];
                 
-                
                 CGSize size = CGRectIntersection(task.frame, element.frame).size;
-                CGPoint shift = { size.width, size.height };
+                CGPoint shift = { size.width+1, size.height+1 };
                 shift.x *= pushDirection.x;
                 shift.y *= pushDirection.y;
-                [pushedTask boundedShiftBy:shift];
+                // If pushedTask didn't get shifted all the way...
+                if([pushedTask boundedShiftBy:shift]) {
+                    pushDirection = inverseDirection(pushDirection);
+                    size = CGRectIntersection(task.frame, pushedTask.frame).size;
+                    shift = (CGPoint){ size.width+1, size.height+1 };
+                    shift.x *= pushDirection.x;
+                    shift.y *= pushDirection.y;
+                    [task boundedShiftBy:shift];
+                }
+                [self pushTasksWith:pushedTask];
             }
         }
     }
 }
 - (void)taskMoveFinished:(NSNotification *)notification {
+    [self anchorTasks];
+}
+- (void)anchorTasks {
     for(UIView *element in taskField.subviews) {
         // Don't bother unless they are intersecting
         if([element isKindOfClass:ToDoCloudLabel.class]) {

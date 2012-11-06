@@ -16,6 +16,10 @@ typedef struct {
     int    y;
 } Direction;
 
+NSString* NSStringFromDirection(Direction d);
+BOOL directionIsZero(Direction d);
+Direction inverseDirection(Direction d);
+
 @interface ToDoCloudLabel : UILabel <NSCoding, UIActionSheetDelegate>{
     CGPoint currentPoint;
     CGRect previousPosition;
@@ -32,9 +36,9 @@ typedef struct {
 - (CGPoint)getShift;
 - (CGRect)anchoredFrame;
 
-- (void)moveToCenter;
-- (void)boundedShiftBy:(CGPoint)shiftFactor;
-- (void)boundedMoveToNewCenter:(CGPoint)newPoint;
+- (BOOL)moveToCenter;
+- (BOOL)boundedShiftBy:(CGPoint)shiftFactor;
+- (BOOL)boundedMoveToNewCenter:(CGPoint)newPoint;
 - (void)snapToAnchor;
 - (void)updateFontSize;
 
