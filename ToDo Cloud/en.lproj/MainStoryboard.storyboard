@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2844" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1929"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1930"/>
     </dependencies>
     <scenes>
         <!--To Do Cloud View Controller-->
@@ -15,7 +15,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="tascloudwallpaper_softhighres.png" translatesAutoresizingMaskIntoConstraints="NO" id="V2E-na-11Z"/>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yQf-sN-sQs">
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="center" image="tascloudicon_trashhighres.png" translatesAutoresizingMaskIntoConstraints="NO" id="wtd-NF-E3Q">
+                                    <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" image="tascloudicon_trash_highres.png" translatesAutoresizingMaskIntoConstraints="NO" id="wtd-NF-E3Q">
                                         <accessibility key="accessibilityConfiguration">
                                             <accessibilityTraits key="traits" none="YES" image="YES" notEnabled="YES"/>
                                         </accessibility>
@@ -24,31 +24,37 @@
                                             <constraint firstAttribute="height" constant="44" id="mVD-XN-3f9"/>
                                         </constraints>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="center" image="tascloudicon_completehighres.png" translatesAutoresizingMaskIntoConstraints="NO" id="JhR-WG-6VA">
+                                    <imageView userInteractionEnabled="NO" tag="2" contentMode="scaleToFill" image="tascloudicon_complete_bw_highres.png" translatesAutoresizingMaskIntoConstraints="NO" id="JhR-WG-6VA">
+                                        <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="36" id="hut-Jb-iU5"/>
                                         </constraints>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="h9g-SH-Pm0" appends="YES" id="fuA-Od-p16"/>
+                                        </connections>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="JhR-WG-6VA" firstAttribute="top" secondItem="wtd-NF-E3Q" secondAttribute="top" type="default" id="7qh-Jm-n0I"/>
+                                    <constraint firstAttribute="bottom" secondItem="JhR-WG-6VA" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="JJm-Yz-fG1"/>
+                                    <constraint firstAttribute="trailing" secondItem="JhR-WG-6VA" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="Y8d-cG-4ya"/>
                                     <constraint firstAttribute="bottom" secondItem="wtd-NF-E3Q" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="m7k-Jh-7gd"/>
-                                    <constraint firstItem="JhR-WG-6VA" firstAttribute="top" secondItem="wtd-NF-E3Q" secondAttribute="top" type="default" id="nSJ-Gv-0LQ"/>
                                     <constraint firstItem="wtd-NF-E3Q" firstAttribute="leading" secondItem="yQf-sN-sQs" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="oy6-E7-8KJ"/>
-                                    <constraint firstAttribute="bottom" secondItem="JhR-WG-6VA" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="vfs-rb-rIt"/>
-                                    <constraint firstAttribute="trailing" secondItem="JhR-WG-6VA" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="w7q-Eh-vvh"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oat-CP-Ise">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oat-CP-Ise">
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="8Ms-bR-HHh"/>
+                                    <constraint firstAttribute="height" constant="44" id="OEi-cl-C47"/>
                                     <constraint firstAttribute="width" constant="43" id="oxy-Yt-Wle"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="27"/>
-                                <state key="normal" backgroundImage="tascloudbutton_addwithoutcloudhighres.png">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="53"/>
+                                <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="7"/>
+                                <size key="titleShadowOffset" width="1" height="1"/>
+                                <state key="normal" title="+">
+                                    <color key="titleColor" red="0.1764705926" green="0.1764705926" blue="0.1764705926" alpha="1" colorSpace="deviceRGB"/>
+                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -92,23 +98,65 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="h9g-SH-Pm0">
+                    <connections>
+                        <action selector="tapTest:" destination="2" id="VCn-lC-d8b"/>
+                        <segue destination="Std-OZ-grl" kind="push" id="r1E-fu-QnT"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
+            <point key="canvasLocation" x="100" y="28"/>
+        </scene>
+        <!--Table View Controller - Completed Tasks-->
+        <scene sceneID="WuQ-Dg-Dav">
+            <objects>
+                <tableViewController id="Std-OZ-grl" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="YcN-mP-j0S" customClass="ToDoCloudTableViewController">
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="GPc-pc-xS3">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Std-OZ-grl" id="yA1-S0-bzf"/>
+                            <outlet property="delegate" destination="Std-OZ-grl" id="Q3t-UC-f0g"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Completed Tasks" id="5I4-PN-kyQ">
+                        <barButtonItem key="backBarButtonItem" title="Back" id="WGP-vA-u91"/>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zgh-od-IeK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="529" y="28"/>
         </scene>
     </scenes>
     <resources>
-        <image name="tascloudbutton_addwithoutcloudhighres.png" width="40" height="40"/>
-        <image name="tascloudicon_completehighres.png" width="40" height="40"/>
-        <image name="tascloudicon_trashhighres.png" width="40" height="40"/>
+        <image name="tascloudicon_complete_bw_highres.png" width="80" height="80"/>
+        <image name="tascloudicon_trash_highres.png" width="300" height="300"/>
         <image name="tascloudwallpaper_softhighres.png" width="640" height="960"/>
     </resources>
     <classes>
         <class className="NSLayoutConstraint" superclassName="NSObject">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
         </class>
+        <class className="ToDoCloudTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ToDoCloudTableViewController.h"/>
+        </class>
         <class className="ToDoCloudViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ToDoCloudViewController.h"/>
             <relationships>
                 <relationship kind="action" name="addTask:"/>
+                <relationship kind="action" name="tapTest:"/>
                 <relationship kind="outlet" name="completeArea" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="deleteArea" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="taskField" candidateClass="UIView"/>

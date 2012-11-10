@@ -65,7 +65,7 @@ Direction inverseDirection(Direction d) {
         self.center = center;
         self.anchor = [self frameAtPosition:center];
         self.userInteractionEnabled = true;
-        self.backgroundColor = [UIColor redColor];
+        self.backgroundColor = [UIColor clearColor];
         self.textColor = [UIColor colorWithWhite: 0.13 alpha:1];
     }
     return self;
@@ -103,7 +103,6 @@ Direction inverseDirection(Direction d) {
     // The point in taskField when the touch ended
     CGPoint endPoint = [[touches anyObject] locationInView:self.superview];
     
-    CGFloat tops = [self.superview viewWithTag:1].frame.origin.y - 8.0;
     // Check for delete
     if(CGRectContainsPoint([self.superview viewWithTag:1].frame, endPoint)) {
         [self showDeleteActionSheet];
@@ -113,10 +112,9 @@ Direction inverseDirection(Direction d) {
         //TODO: store the completed ones somewhere. WHERE? who knows!
         NSLog(@"Completed");
     // Check for bounce
-    } else if(self.frame.origin.y + self.frame.size.height > tops) {
+    } else if([self isInBounceZone]) {
         //bounce up!
         [self bounceAwayFromBottom];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"Task Move Finished" object:self];
     }
 }
 
@@ -198,20 +196,27 @@ Direction inverseDirection(Direction d) {
 - (BOOL)boundedShiftBy:(CGPoint)shiftFactor {
     return [self boundedMoveToNewCenter:CGPointMake(self.center.x + shiftFactor.x, self.center.y + shiftFactor.y)];
 }
+- (BOOL)isInBounceZone {
+    CGFloat tops = [self.superview viewWithTag:1].frame.origin.y - 8.0;
+    return self.frame.origin.y + self.frame.size.height > tops;
+}
 - (void)bounceAwayFromBottom {
     CGFloat tops = [self.superview viewWithTag:1].frame.origin.y - 8.0;
     CGPoint newCenter = CGPointMake(self.center.x, tops - (self.frame.size.height/2.0));
     CGFloat duration = 1.0 - (self.center.y - newCenter.y)/55.0;
-    [UIView animateWithDuration:0.25 + 0.25*duration
+    previousPosition = self.frame;
+    [UIView animateWithDuration:0.25
                           delay:0
                         options: UIViewAnimationCurveEaseIn
                      animations:^{
                          self.center = newCenter;
+                         [self updateFontSize];
                      }
                      completion:^(BOOL finished){
-                         NSLog(@"Bounce Done!");
+                         [self updateFontSize];
+                         [[NSNotificationCenter defaultCenter] postNotificationName:@"Task Moved" object:self];
+                         [[NSNotificationCenter defaultCenter] postNotificationName:@"Task Move Finished" object:self];
                      }];
-    [self updateFontSize];
 }
 // Returns the offset from the desired point
 - (BOOL)boundedMoveToNewCenter:(CGPoint)newPoint {

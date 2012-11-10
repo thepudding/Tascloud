@@ -24,6 +24,10 @@ UIActionSheet *deleteConfirmation;
 // Holds reloaded task objects till they can be placed in the taskField
 NSArray *loggedTasks;
 // Saves tasks to the archiver
+- (IBAction)tapTest:(id)sender {
+    NSLog(@"tap!");
+}
+
 - (void)saveStateWith:(NSKeyedArchiver *)archiver {
     NSMutableArray *save = [[NSMutableArray alloc] init];
     for(UIView *element in taskField.subviews) {
@@ -142,7 +146,12 @@ NSArray *loggedTasks;
         // Don't bother unless they are intersecting
         if([element isKindOfClass:ToDoCloudLabel.class]) {
             ToDoCloudLabel *task = (ToDoCloudLabel *)element;
-            task.anchor = task.frame;
+            if([task isInBounceZone]) {
+                [task bounceAwayFromBottom];
+                return;
+            } else {
+                task.anchor = task.frame;
+            }
         }
     }
 }

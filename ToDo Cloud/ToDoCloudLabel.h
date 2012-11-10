@@ -42,6 +42,8 @@ Direction inverseDirection(Direction d);
 - (void)snapToAnchor;
 - (void)updateFontSize;
 
+- (BOOL)isInBounceZone;
+- (void)bounceAwayFromBottom;
 
 -(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
 @end

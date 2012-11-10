@@ -17,6 +17,10 @@
 		FA7E3B28162A0A9500E4F46D /* tascloudicon_iphonelowres.png in Resources */ = {isa = PBXBuildFile; fileRef = FA7E3B19162A0A9500E4F46D /* tascloudicon_iphonelowres.png */; };
 		FA7E3B29162A0A9500E4F46D /* tascloudicon_preview.png in Resources */ = {isa = PBXBuildFile; fileRef = FA7E3B1A162A0A9500E4F46D /* tascloudicon_preview.png */; };
 		FA7E3B2A162A0A9500E4F46D /* tascloudwallpaper_softhighres.png in Resources */ = {isa = PBXBuildFile; fileRef = FA7E3B1B162A0A9500E4F46D /* tascloudwallpaper_softhighres.png */; };
+		FA9225E41649B8360015259D /* tascloudicon_complete_bw.png in Resources */ = {isa = PBXBuildFile; fileRef = FA9225E31649B8360015259D /* tascloudicon_complete_bw.png */; };
+		FA9225E71649B9C90015259D /* tascloudicon_complete_bw_highres.png in Resources */ = {isa = PBXBuildFile; fileRef = FA9225E61649B9C90015259D /* tascloudicon_complete_bw_highres.png */; };
+		FA9225E91649C45B0015259D /* tascloudicon_trash_highres.png in Resources */ = {isa = PBXBuildFile; fileRef = FA9225E81649C45B0015259D /* tascloudicon_trash_highres.png */; };
+		FA9225EC1649C91F0015259D /* ToDoCloudTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9225EB1649C91F0015259D /* ToDoCloudTableViewController.m */; };
 		FAD725CB1623E8F0008028F2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD725CA1623E8F0008028F2 /* UIKit.framework */; };
 		FAD725CD1623E8F0008028F2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD725CC1623E8F0008028F2 /* Foundation.framework */; };
 		FAD725CF1623E8F0008028F2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAD725CE1623E8F0008028F2 /* CoreGraphics.framework */; };
@@ -45,6 +49,11 @@
 		FA7E3B19162A0A9500E4F46D /* tascloudicon_iphonelowres.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tascloudicon_iphonelowres.png; sourceTree = "<group>"; };
 		FA7E3B1A162A0A9500E4F46D /* tascloudicon_preview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tascloudicon_preview.png; sourceTree = "<group>"; };
 		FA7E3B1B162A0A9500E4F46D /* tascloudwallpaper_softhighres.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tascloudwallpaper_softhighres.png; sourceTree = "<group>"; };
+		FA9225E31649B8360015259D /* tascloudicon_complete_bw.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tascloudicon_complete_bw.png; sourceTree = "<group>"; };
+		FA9225E61649B9C90015259D /* tascloudicon_complete_bw_highres.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tascloudicon_complete_bw_highres.png; sourceTree = "<group>"; };
+		FA9225E81649C45B0015259D /* tascloudicon_trash_highres.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tascloudicon_trash_highres.png; sourceTree = "<group>"; };
+		FA9225EA1649C91F0015259D /* ToDoCloudTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToDoCloudTableViewController.h; sourceTree = "<group>"; };
+		FA9225EB1649C91F0015259D /* ToDoCloudTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToDoCloudTableViewController.m; sourceTree = "<group>"; };
 		FAD725C61623E8F0008028F2 /* ToDo Cloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ToDo Cloud.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAD725CA1623E8F0008028F2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FAD725CC1623E8F0008028F2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -107,6 +116,9 @@
 		FA7E3B13162A0A9500E4F46D /* App Icon */ = {
 			isa = PBXGroup;
 			children = (
+				FA9225E81649C45B0015259D /* tascloudicon_trash_highres.png */,
+				FA9225E61649B9C90015259D /* tascloudicon_complete_bw_highres.png */,
+				FA9225E31649B8360015259D /* tascloudicon_complete_bw.png */,
 				FA7E3B14162A0A9500E4F46D /* Tascloud Icon.png */,
 				FA7E3B18162A0A9500E4F46D /* tascloudicon_iphonehighres.png */,
 				FA7E3B19162A0A9500E4F46D /* tascloudicon_iphonelowres.png */,
@@ -150,6 +162,8 @@
 				FAD725D91623E8F0008028F2 /* ToDoCloudAppDelegate.h */,
 				FAD725DA1623E8F0008028F2 /* ToDoCloudAppDelegate.m */,
 				FAD725E21623E8F0008028F2 /* MainStoryboard.storyboard */,
+				FA9225EA1649C91F0015259D /* ToDoCloudTableViewController.h */,
+				FA9225EB1649C91F0015259D /* ToDoCloudTableViewController.m */,
 				FAD725E51623E8F0008028F2 /* ToDoCloudViewController.h */,
 				FAD725E61623E8F0008028F2 /* ToDoCloudViewController.m */,
 				FAD725D11623E8F0008028F2 /* Supporting Files */,
@@ -242,6 +256,9 @@
 				FA7E3B28162A0A9500E4F46D /* tascloudicon_iphonelowres.png in Resources */,
 				FA7E3B29162A0A9500E4F46D /* tascloudicon_preview.png in Resources */,
 				FA7E3B2A162A0A9500E4F46D /* tascloudwallpaper_softhighres.png in Resources */,
+				FA9225E41649B8360015259D /* tascloudicon_complete_bw.png in Resources */,
+				FA9225E71649B9C90015259D /* tascloudicon_complete_bw_highres.png in Resources */,
+				FA9225E91649C45B0015259D /* tascloudicon_trash_highres.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +274,7 @@
 				FAD725E71623E8F0008028F2 /* ToDoCloudViewController.m in Sources */,
 				FAD726EE1624DBD6008028F2 /* ToDoCloudLabel.m in Sources */,
 				FA7E3B08162A037F00E4F46D /* utils.c in Sources */,
+				FA9225EC1649C91F0015259D /* ToDoCloudTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

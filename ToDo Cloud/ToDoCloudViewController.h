@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *completeArea;
 
 @property (nonatomic) CGPoint visualCenter;
+- (IBAction)tapTest:(id)sender;
 - (void)saveStateWith:(NSKeyedArchiver *)archiver;
 - (void)restoreStateWith:(NSKeyedUnarchiver *)unarchiver;
 - (IBAction)addTask:(id)sender;
