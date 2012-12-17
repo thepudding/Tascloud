@@ -13,14 +13,23 @@
 #define BUTTONS_HEIGHT 41
 
 @interface ToDoCloudViewController : UIViewController <UITextFieldDelegate>
+
 @property (weak, nonatomic) IBOutlet UITextField *taskInput;
 @property (weak, nonatomic) IBOutlet UIView*taskField;
 @property (weak, nonatomic) IBOutlet UIImageView *deleteArea;
 @property (weak, nonatomic) IBOutlet UIImageView *completeArea;
 
+// For the Completed Tasks list.
+@property (retain) NSMutableDictionary *completedTasks;
+@property (retain) NSMutableArray *completionDates;
+
 @property (nonatomic) CGPoint visualCenter;
+
++ (NSDateFormatter *)formatter;
+
 - (IBAction)tapTest:(id)sender;
 - (void)saveStateWith:(NSKeyedArchiver *)archiver;
 - (void)restoreStateWith:(NSKeyedUnarchiver *)unarchiver;
 - (IBAction)addTask:(id)sender;
+
 @end

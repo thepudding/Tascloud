@@ -8,15 +8,20 @@
 
 #import "ToDoCloudViewController.h"
 
-@interface ToDoCloudViewController ()
-
-@end
-
 @implementation ToDoCloudViewController
-@synthesize taskInput, taskField, visualCenter, deleteArea, completeArea;
+@synthesize taskInput, taskField, visualCenter, deleteArea, completeArea, completedTasks, completionDates;
 
 UIActionSheet *deleteConfirmation;
 
+NSDateFormatter *theFormatter;
+NSCalendar *calendar;
+NSInteger comps;
++ (void)initialize {
+    theFormatter = [[NSDateFormatter alloc] init];
+    [theFormatter setDateFormat:@"MMM dd yyyy"];
+}
+
++ (NSDateFormatter *) formatter { return theFormatter; }
 
 /*
  * Data persistence
@@ -29,24 +34,33 @@ NSArray *loggedTasks;
 }
 
 - (void)saveStateWith:(NSKeyedArchiver *)archiver {
-    NSMutableArray *save = [[NSMutableArray alloc] init];
+    NSMutableArray *saveTask = [[NSMutableArray alloc] init];
     for(UIView *element in taskField.subviews) {
         if([element isKindOfClass: ToDoCloudLabel.class]) {
             ToDoCloudLabel *label = (ToDoCloudLabel *)element;
-            [save addObject:label];
+            [saveTask addObject:label];
         }
     }
-    [archiver encodeObject:save forKey:@"tasks"];
+    [archiver encodeObject:saveTask forKey:@"tasks"];
+    [archiver encodeObject:completedTasks forKey:@"completedTasks"];
+    [archiver encodeObject:completionDates forKey:@"completionDates"];
 }
 // Loads tasks from the archiver
 - (void)restoreStateWith:(NSKeyedUnarchiver *)unarchiver {
     loggedTasks = [unarchiver decodeObjectForKey:@"tasks"];
+    completedTasks = [[NSMutableDictionary alloc] init];
+    completionDates  = [[NSMutableArray alloc] init];
+    self.completedTasks = [unarchiver decodeObjectForKey:@"completedTasks"];
+    self.completionDates = [unarchiver decodeObjectForKey:@"completionDates"];
+    NSLog(@"restored tasks: %@, dates: %@", completedTasks, completionDates);
 }
 
-
 - (void)viewDidAppear:(BOOL)animated {
-    
     [super viewDidAppear:animated];
+    
+    calendar = [NSCalendar currentCalendar];
+    comps = (NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit);
+    
     
     self.visualCenter = CGPointMake(CGRectGetMidX(taskField.bounds),
                                     CGRectGetMidY(taskField.bounds)-BUTTONS_HEIGHT);
@@ -71,6 +85,10 @@ NSArray *loggedTasks;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(taskMoveFinished:)
                                                  name:@"Task Move Finished"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(taskCompleted:)
+                                                 name:@"Task Completed"
                                                object:nil];
 }
 
@@ -155,4 +173,42 @@ NSArray *loggedTasks;
         }
     }
 }
+
+/*
+ * Task Completion Logging
+ */
+- (void)taskCompleted:(NSNotification *)notification {
+    NSString *task = [[notification object] text];
+    NSDate *today = [calendar dateFromComponents: [calendar components:comps
+                                                                        fromDate: [NSDate date]]];
+    //TODO: store the completed ones somewhere. WHERE? who knows!
+    NSLog(@"'%@' Completed", task);
+    
+    NSMutableArray *todaysCompletedTasks = [completedTasks objectForKey:today];
+    if([todaysCompletedTasks count] > 0) {
+        [todaysCompletedTasks addObject:task];
+    } else {
+        [self addCompletionDate:today];
+        [completedTasks
+         setObject: [[NSMutableArray alloc] initWithObjects:task, nil]
+         forKey:today];
+    
+    }
+    NSLog(@"%@ %@", completionDates, completedTasks);
+    
+}
+- (void)addCompletionDate:(NSDate *)date {
+    
+    
+    NSUInteger i = [self.completionDates indexOfObjectPassingTest: ^BOOL(id obj, NSUInteger idx, BOOL *stop){
+        return [date compare: obj] == NSOrderedAscending;
+    }];
+    if(i < [self.completionDates count]) {
+        [self.completionDates insertObject:date atIndex:i];
+    } else {
+        [self.completionDates addObject:date];
+    }
+
+}
+
 @end

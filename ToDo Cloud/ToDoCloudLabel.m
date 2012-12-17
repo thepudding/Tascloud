@@ -109,8 +109,7 @@ Direction inverseDirection(Direction d) {
     // Check for Complete
     } else if(CGRectContainsPoint([self.superview viewWithTag:2].frame, endPoint)) {
         [self removeFromSuperview];
-        //TODO: store the completed ones somewhere. WHERE? who knows!
-        NSLog(@"Completed");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Task Completed" object: self];
     // Check for bounce
     } else if([self isInBounceZone]) {
         //bounce up!
