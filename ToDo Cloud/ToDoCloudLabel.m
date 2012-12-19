@@ -40,7 +40,7 @@ Direction inverseDirection(Direction d) {
 
 @implementation ToDoCloudLabel
 
-@synthesize visualCenter, lastPushedDirection, anchor;
+@synthesize visualCenter, lastPushedDirection, anchor, completed;
 ////////
 // NSCoder implementation
 ////////
@@ -61,6 +61,7 @@ Direction inverseDirection(Direction d) {
 }
 - (id)initWithText:(NSString *)text center:(CGPoint)center {
     if (self = [super init]) {
+        self.completed = false;
         self.text = text;
         self.center = center;
         self.anchor = [self frameAtPosition:center];
@@ -107,10 +108,12 @@ Direction inverseDirection(Direction d) {
     if(CGRectContainsPoint([self.superview viewWithTag:1].frame, endPoint)) {
         [self showDeleteActionSheet];
     // Check for Complete
-    } else if(CGRectContainsPoint([self.superview viewWithTag:2].frame, endPoint)) {
-        [self removeFromSuperview];
+    } else if(CGRectContainsPoint([self.superview viewWithTag:2].frame, endPoint) && !self.completed) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Task Completed" object: self];
+        self.completed = true;
     // Check for bounce
+    } else if(completed) {
+        [self removeFromSuperview];
     } else if([self isInBounceZone]) {
         //bounce up!
         [self bounceAwayFromBottom];
@@ -202,7 +205,7 @@ Direction inverseDirection(Direction d) {
 - (void)bounceAwayFromBottom {
     CGFloat tops = [self.superview viewWithTag:1].frame.origin.y - 8.0;
     CGPoint newCenter = CGPointMake(self.center.x, tops - (self.frame.size.height/2.0));
-    CGFloat duration = 1.0 - (self.center.y - newCenter.y)/55.0;
+    //CGFloat duration = 1.0 - (self.center.y - newCenter.y)/55.0;
     previousPosition = self.frame;
     [UIView animateWithDuration:0.25
                           delay:0

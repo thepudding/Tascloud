@@ -7,9 +7,9 @@
 //
 #import "utils.h"
 
-#define MINIMUM_FONT_SIZE   20
-#define MAXIMUM_FONT_SIZE   40
-#define FONT_RESIZE_FACTOR  12.5
+#define MINIMUM_FONT_SIZE   30
+#define MAXIMUM_FONT_SIZE   60
+#define FONT_RESIZE_FACTOR  6
 
 typedef struct {
     int    x;
@@ -27,6 +27,7 @@ Direction inverseDirection(Direction d);
 @property (nonatomic, assign) CGPoint visualCenter;
 @property (nonatomic, assign) Direction lastPushedDirection;
 @property (nonatomic, assign) CGRect anchor;
+@property (nonatomic, assign) BOOL completed;
 
 - (id)initWithText: (NSString *)text center:(CGPoint)center;
 - (id)initAtCenterWithText: (NSString *)text withVisualCenter:(CGPoint)visualCenter;

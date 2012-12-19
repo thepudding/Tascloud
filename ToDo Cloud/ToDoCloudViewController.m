@@ -54,7 +54,12 @@ NSArray *loggedTasks;
     self.completionDates = [unarchiver decodeObjectForKey:@"completionDates"];
     NSLog(@"restored tasks: %@, dates: %@", completedTasks, completionDates);
 }
-
+- (void)viewDidLoad {
+    if(self.completedTasks == nil) {
+        self.completedTasks = [[NSMutableDictionary alloc] init];
+        self.completionDates =[[NSMutableArray alloc] init];
+    }
+}
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
@@ -179,9 +184,13 @@ NSArray *loggedTasks;
  */
 - (void)taskCompleted:(NSNotification *)notification {
     NSString *task = [[notification object] text];
+    [[notification object] performSelectorOnMainThread:@selector(removeFromSuperview) withObject:nil waitUntilDone:NO];
+    
     NSDate *today = [calendar dateFromComponents: [calendar components:comps
                                                                         fromDate: [NSDate date]]];
-    //TODO: store the completed ones somewhere. WHERE? who knows!
+    
+    if([notification object] && [[notification object] completed]) { return; }
+    
     NSLog(@"'%@' Completed", task);
     
     NSMutableArray *todaysCompletedTasks = [completedTasks objectForKey:today];
@@ -195,7 +204,6 @@ NSArray *loggedTasks;
     
     }
     NSLog(@"%@ %@", completionDates, completedTasks);
-    
 }
 - (void)addCompletionDate:(NSDate *)date {
     
