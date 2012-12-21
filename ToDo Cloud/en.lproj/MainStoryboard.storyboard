@@ -40,7 +40,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="JhR-WG-6VA" firstAttribute="top" secondItem="wtd-NF-E3Q" secondAttribute="top" type="default" id="7qh-Jm-n0I"/>
-                                    <constraint firstAttribute="bottom" secondItem="JhR-WG-6VA" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="JJm-Yz-fG1"/>
+                                    <constraint firstAttribute="bottom" secondItem="JhR-WG-6VA" secondAttribute="bottom" constant="20" symbolic="YES" type="user" id="JJm-Yz-fG1"/>
                                     <constraint firstAttribute="trailing" secondItem="JhR-WG-6VA" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="Y8d-cG-4ya"/>
                                     <constraint firstAttribute="bottom" secondItem="wtd-NF-E3Q" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="m7k-Jh-7gd"/>
                                     <constraint firstItem="wtd-NF-E3Q" firstAttribute="leading" secondItem="yQf-sN-sQs" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="oy6-E7-8KJ"/>
@@ -182,34 +182,6 @@
         <image name="tascloudicon_trash_highres.png" width="300" height="300"/>
         <image name="tascloudwallpaper_softhighres.png" width="640" height="960"/>
     </resources>
-    <classes>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-        <class className="ToDoCloudTableViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ToDoCloudTableViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="dismissTable:"/>
-                <relationship kind="action" name="editTasks:"/>
-                <relationship kind="outlet" name="doneButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="editButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="taskTable" candidateClass="UITableView"/>
-                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
-                <relationship kind="outlet" name="toolbarTitle" candidateClass="UIBarButtonItem"/>
-            </relationships>
-        </class>
-        <class className="ToDoCloudViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ToDoCloudViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="addTask:"/>
-                <relationship kind="action" name="tapTest:"/>
-                <relationship kind="outlet" name="completeArea" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="deleteArea" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="taskField" candidateClass="UIView"/>
-                <relationship kind="outlet" name="taskInput" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

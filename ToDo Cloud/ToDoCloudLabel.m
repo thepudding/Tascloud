@@ -41,6 +41,7 @@ Direction inverseDirection(Direction d) {
 @implementation ToDoCloudLabel
 
 @synthesize visualCenter, lastPushedDirection, anchor, completed;
+CGRect deleteArea, completeArea;
 ////////
 // NSCoder implementation
 ////////
@@ -105,10 +106,10 @@ Direction inverseDirection(Direction d) {
     CGPoint endPoint = [[touches anyObject] locationInView:self.superview];
     
     // Check for delete
-    if(CGRectContainsPoint([self.superview viewWithTag:1].frame, endPoint)) {
+    if([self deleteAreaContainsPoint:endPoint]) {
         [self showDeleteActionSheet];
     // Check for Complete
-    } else if(CGRectContainsPoint([self.superview viewWithTag:2].frame, endPoint) && !self.completed) {
+    } else if([self completeAreaContainsPoint:endPoint] && !self.completed) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Task Completed" object: self];
         self.completed = true;
     // Check for bounce
@@ -189,6 +190,18 @@ Direction inverseDirection(Direction d) {
                        self.center.y - CGRectGetMidY(previousPosition));
 }
 
+- (BOOL)deleteAreaContainsPoint:(CGPoint) point {
+    if(CGRectIsEmpty(deleteArea)) {
+        deleteArea = CGRectOffset(CGRectInset([self.superview viewWithTag:1].frame, -40, -20),0,10);
+    }
+    return CGRectContainsPoint(deleteArea, point);
+}
+- (BOOL)completeAreaContainsPoint:(CGPoint) point {
+    if(CGRectIsEmpty(completeArea)) {
+        completeArea = CGRectOffset(CGRectInset([self.superview viewWithTag:2].frame, -40, -20),0,10);
+    }
+    return CGRectContainsPoint(completeArea, point);
+}
 ////////
 // Movement Methods
 ////////
