@@ -104,6 +104,8 @@ NSDateFormatter *formatter;
     if([sectionTasks count] == 0) {
         
         [self.completedTasks removeObjectForKey:sectionDate];
+        [self.completionDates removeObject:sectionDate];
+        NSLog(@"%@",self.completionDates);
         [tableView
          deleteSections: [[NSIndexSet alloc] initWithIndex: [indexPath indexAtPosition:0]]
          withRowAnimation: UITableViewRowAnimationAutomatic];
