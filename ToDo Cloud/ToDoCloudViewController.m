@@ -190,7 +190,7 @@ NSArray *loggedTasks;
                                                                         fromDate: [NSDate date]]];
     
     if([notification object] && [[notification object] completed]) { return; }
-    
+    [[notification object] setCompleted: true];
     NSLog(@"'%@' Completed", task);
     
     NSMutableArray *todaysCompletedTasks = [completedTasks objectForKey:today];
